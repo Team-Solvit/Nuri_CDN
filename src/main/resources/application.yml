@@ -1,0 +1,22 @@
+spring:
+  application:
+    name:
+      nuri-cdn
+  datasource:
+    driver-class-name:
+      ${POSTGRES_DRIVER_NAME}
+    url:
+      ${POSTGRES_URL}
+    username:
+      ${POSTGRES_USERNAME}
+    password:
+      ${POSTGRES_ROOT_PASSWORD}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+file:
+  base-path: ${BASE_PATH}
+  contents:
+    - image/png
+    - image/jpeg
