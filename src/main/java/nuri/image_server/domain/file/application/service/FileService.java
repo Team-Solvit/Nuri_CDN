@@ -5,7 +5,6 @@ import nuri.image_server.domain.file.domain.entity.FileEntity;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
 import nuri.image_server.domain.file.domain.repository.FileEntityRepository;
-import nuri.image_server.domain.file.presentation.dto.req.FileUploadRequestDto;
 import nuri.image_server.domain.secret_key.domain.exception.SecretKeyNotFoundException;
 import nuri.image_server.domain.secret_key.domain.repository.SecretKeyEntityRepository;
 import nuri.image_server.global.exception.NuriException;
@@ -14,6 +13,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +43,7 @@ public class FileService {
         }
     }
 
-    public List<UUID> uploadFiles(String secretKey, List<FileUploadRequestDto> fileUploadRequestDtoList) {
+    public List<UUID> uploadFiles(String secretKey, List<MultipartFile> fileUploadRequestDtoList) {
         if(!secretKeyEntityRepository.existsBySecretKey(secretKey)) {
             throw new SecretKeyNotFoundException(secretKey);
         }
@@ -51,18 +51,17 @@ public class FileService {
         String basePath = fileProperties.getBasePath();
 
         List<FileEntity> fileEntities = fileUploadRequestDtoList.stream().map(fileUploadRequestDto -> {
-            if(fileProperties.getContents().stream().noneMatch(type -> type.equals(fileUploadRequestDto.file().getContentType()))) {
+            if(fileProperties.getContents().stream().noneMatch(type -> type.equals(fileUploadRequestDto.getContentType()))) {
                 throw new FileEmptyException();
             }
 
             FileEntity fileEntity = FileEntity.builder()
-                    .type(fileUploadRequestDto.file().getContentType())
-                    .writerId(fileUploadRequestDto.userId())
+                    .type(fileUploadRequestDto.getContentType())
                     .build();
 
             String fileName = basePath + fileEntity.getId().toString();
 
-            try (InputStream inputStream = fileUploadRequestDto.file().getInputStream()) {
+            try (InputStream inputStream = fileUploadRequestDto.getInputStream()) {
                 Path uploadPath = Paths.get(fileName);
                 Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
                 return fileEntity;

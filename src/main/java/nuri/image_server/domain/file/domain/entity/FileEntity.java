@@ -12,15 +12,12 @@ import nuri.image_server.global.entity.BaseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FileEntity extends BaseEntity {
-    @Column(name = "writer")
-    private String writerId;
 
     @Column(name = "type")
     private String type;
 
     @Builder
-    public FileEntity(String type, String writerId) {
+    public FileEntity(String type) {
         this.type = type;
-        this.writerId = writerId;
     }
 }

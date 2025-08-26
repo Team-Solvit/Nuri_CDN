@@ -5,10 +5,10 @@ import nuri.image_server.domain.file.application.service.FileService;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileInvalidException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
-import nuri.image_server.domain.file.presentation.dto.req.FileUploadRequestDto;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,13 +25,13 @@ public class FileController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<List<UUID>> uploadFiles(@RequestParam("files") List<FileUploadRequestDto> fileUploadRequestDtoList, @RequestParam String secretKey) {
-        for(FileUploadRequestDto fileUploadRequestDto : fileUploadRequestDtoList) {
-            if(fileUploadRequestDto.file().isEmpty()) {
+    public ResponseEntity<List<UUID>> uploadFiles(@RequestParam("files") List<MultipartFile> files, @RequestParam String secretKey) {
+        for(MultipartFile multipartFile : files) {
+            if(multipartFile.isEmpty()) {
                 throw new FileInvalidException();
             }
         }
-        return ResponseEntity.ok(fileService.uploadFiles(secretKey, fileUploadRequestDtoList));
+        return ResponseEntity.ok(fileService.uploadFiles(secretKey, files));
     }
 
     @DeleteMapping("/")
