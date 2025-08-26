@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import nuri.image_server.domain.file.application.service.FileService;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileInvalidException;
-import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
 import nuri.image_server.domain.file.presentation.dto.req.FileUploadRequestDto;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +19,6 @@ public class FileController {
 
     @GetMapping("/{fileId}")
     public ResponseEntity<Resource> readFile(@PathVariable UUID fileId) {
-        if(fileId == null) throw new FileNotFoundException();
         return ResponseEntity.ok(fileService.readFile(fileId));
     }
 

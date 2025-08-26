@@ -5,6 +5,7 @@ import nuri.image_server.global.exception.ErrorResponse;
 import nuri.image_server.global.exception.NuriException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -13,6 +14,18 @@ import java.time.OffsetDateTime;
 @RestControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message(e.getBindingResult().getFieldError() != null
+                        ? e.getBindingResult().getFieldError().getDefaultMessage()
+                        : "Validation error occurred")
+                .build();
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(NuriException.class)
     public ResponseEntity<ErrorResponse> handleNuriException(NuriException e) {
