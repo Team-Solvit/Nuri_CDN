@@ -5,7 +5,9 @@ import nuri.image_server.domain.file.application.service.FileService;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileInvalidException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
+import nuri.image_server.domain.file.presentation.dto.FileResourceWithType;
 import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,7 +23,8 @@ public class FileController {
     @GetMapping("/{fileId}")
     public ResponseEntity<Resource> readFile(@PathVariable UUID fileId) {
         if(fileId == null) throw new FileNotFoundException();
-        return ResponseEntity.ok(fileService.readFile(fileId));
+        FileResourceWithType fileResourceWithType = fileService.readFile(fileId);
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(fileResourceWithType.contentType())).body(fileResourceWithType.resource());
     }
 
     @PostMapping("/")

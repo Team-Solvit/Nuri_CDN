@@ -6,11 +6,11 @@ import nuri.image_server.domain.file.domain.entity.FileEntity;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
 import nuri.image_server.domain.file.domain.repository.FileEntityRepository;
+import nuri.image_server.domain.file.presentation.dto.FileResourceWithType;
 import nuri.image_server.domain.secret_key.domain.exception.SecretKeyNotFoundException;
 import nuri.image_server.domain.secret_key.domain.repository.SecretKeyEntityRepository;
 import nuri.image_server.global.exception.NuriException;
 import nuri.image_server.global.properties.FileProperties;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,15 @@ public class FileService {
     private final SecretKeyEntityRepository secretKeyEntityRepository;
     private final FileProperties fileProperties;
 
-    public Resource readFile(UUID fileId) {
+    public FileResourceWithType readFile(UUID fileId) {
         FileEntity fileEntity = fileEntityRepository.findById(fileId).orElseThrow(FileNotFoundException::new);
         String path = fileProperties.getBasePath() + fileEntity.getId();
         try {
             Path filePath = Paths.get(path);
-            return new UrlResource(filePath.toUri());
+            return FileResourceWithType.builder()
+                    .contentType(fileEntity.getType())
+                    .resource(new UrlResource(filePath.toUri()))
+                    .build();
         } catch (IOException e) {
             throw new NuriException("파일을 읽는 도중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
         }

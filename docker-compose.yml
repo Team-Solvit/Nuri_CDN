@@ -30,7 +30,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - cdn-data:/home/deploy
+      - cdn-data:/cdn/files
 
 volumes:
   postgres-data:
