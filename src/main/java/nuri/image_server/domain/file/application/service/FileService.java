@@ -59,6 +59,8 @@ public class FileService {
                     .type(fileUploadRequestDto.getContentType())
                     .build();
 
+            fileEntityRepository.save(fileEntity);
+
             String fileName = basePath + fileEntity.getId().toString();
 
             try (InputStream inputStream = fileUploadRequestDto.getInputStream()) {
