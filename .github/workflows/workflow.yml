@@ -49,4 +49,4 @@ jobs:
             echo "${{ secrets.NURI_ENV }}" > ~/.env
             docker-compose down
             docker pull $IMAGE
-            docker-compose --env-file ~/env/prod.env up -d
+            docker-compose --env-file ~/.env up -d
