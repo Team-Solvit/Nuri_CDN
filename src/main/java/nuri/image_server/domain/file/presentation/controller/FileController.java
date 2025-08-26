@@ -1,5 +1,6 @@
 package nuri.image_server.domain.file.presentation.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import nuri.image_server.domain.file.application.service.FileService;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
@@ -40,7 +41,7 @@ public class FileController {
     }
 
     @DeleteMapping("/")
-    public void deleteFiles(@RequestBody FileDeleteRequest fileDeleteRequest) {
+    public void deleteFiles(@RequestBody @Valid FileDeleteRequest fileDeleteRequest) {
         for(UUID fileId : fileDeleteRequest.fileIds()) {
             if(fileId == null) {
                 throw new FileEmptyException();
