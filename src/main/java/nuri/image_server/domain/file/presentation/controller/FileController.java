@@ -5,6 +5,7 @@ import nuri.image_server.domain.file.application.service.FileService;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileInvalidException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
+import nuri.image_server.domain.file.presentation.dto.FileDeleteRequest;
 import nuri.image_server.domain.file.presentation.dto.FileResourceWithType;
 import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
@@ -39,13 +40,13 @@ public class FileController {
     }
 
     @DeleteMapping("/")
-    public void deleteFiles(@RequestParam("fileId") List<UUID> fileIds, @RequestParam String secretKey) {
-        for(UUID fileId : fileIds) {
+    public void deleteFiles(@RequestBody FileDeleteRequest fileDeleteRequest) {
+        for(UUID fileId : fileDeleteRequest.fileIds()) {
             if(fileId == null) {
                 throw new FileEmptyException();
             }
         }
 
-        fileService.deleteFiles(secretKey, fileIds);
+        fileService.deleteFiles(fileDeleteRequest.secretKey(), fileDeleteRequest.fileIds());
     }
 }
