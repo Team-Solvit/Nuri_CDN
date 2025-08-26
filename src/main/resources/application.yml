@@ -20,3 +20,7 @@ file:
   contents:
     - image/png
     - image/jpeg
+    - application/msword
+    - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+    - application/pdf
+    - application/vnd.hancom.hwp
