@@ -1,6 +1,7 @@
 package nuri.image_server.domain.file.application.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nuri.image_server.domain.file.domain.entity.FileEntity;
 import nuri.image_server.domain.file.domain.exception.FileEmptyException;
 import nuri.image_server.domain.file.domain.exception.FileNotFoundException;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FileService {
     private final FileEntityRepository fileEntityRepository;
     private final SecretKeyEntityRepository secretKeyEntityRepository;
@@ -68,6 +70,7 @@ public class FileService {
                 Files.copy(inputStream, uploadPath, StandardCopyOption.REPLACE_EXISTING);
                 return fileEntity;
             } catch (IOException e) {
+                log.info(e.getMessage());
                 throw new NuriException("입출력에 관한 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }).toList();
