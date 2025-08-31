@@ -31,5 +31,5 @@ file:
 
 web:
   front-urls:
-    - {FRONT_URL_LOCAL}
-    - {FRONT_URL_PROD}
+    - {FRONTEND_URL_PROD}
+    - {FRONTEND_URL_LOCAL}
